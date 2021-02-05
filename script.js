@@ -1,55 +1,59 @@
-// const catFacts = document.querySelector('.cat-facts')
-// fetch(catUrl)
-// .then (response => response.json())
-// .then (data => {
-//   console.log(data)
-//   const catFact = data[0].text
-//   document.querySelector('.cat-facts').innerHTML = `<p>${catFact}</p>`
-// })
-
-const url = 'https://api.exchangeratesapi.io/latest'
-const baseUrl = 'https://api.exchangeratesapi.io/latest?base=BASE_CURRENCY_SYMBOL'
-const urlSpecific = 'https://api.exchangeratesapi.io/latest?symbols=USD,GBP'
-const urlBase = 'https://api.exchangeratesapi.io/latest?base=USD'
-
-const fromCurrencyEl = document.querySelector('.convert-from')
-const fromAmountEl = document.querySelector('.from-amount-field')
-const toCurrencyEl = document.querySelector('.convert-to')
-const toAmountEl = document.querySelector('.to-amount-field')
-const finalAmountEl = document.querySelector('.final-amount')
+const urlBase = 'https://api.exchangeratesapi.io/latest?base='
+const fromCurrency = document.querySelector('#convert-from')
+const fromAmount = document.querySelector('.from-amount-field')
+const toCurrency = document.querySelector('#convert-to')
+const finalAmountDiv = document.querySelector('.final-amount')
+const convertButton = document.querySelector('#convert')
+const amount = document.querySelector('#to-amount-field')
+console.log('toCurrency is', toCurrency)
 
 
-
-fetch (url)
-  .then(response => response.json())
-  .then(data => {
-    console.log('working?', data)
-  // .then(data => {
-    fromCurrency = data.rates
-    console.log('fromCurrency is ', fromCurrency)
-  })
-  // })
-
+convertButton.addEventListener('click',(event) => {
+  console.log("convert", event.target)
+  const fromCurrencyCode = fromCurrency.value.replace('"','')
+  console.log(fromCurrencyCode.length)
+  console.log('fromCurrency is', fromCurrency.value)
+  const toCurrencyCode = toCurrency.value.replace('"','')
+  console.log('toCurrency is', toCurrency.value)
+  const convertAmount = amount.value
   
-  fetch (urlBase)
-  .then(response => response.json())
-  .then(data2 => {
-    console.log('working?', data2)
-  // .then(data => {
-    fromCurrency = data2.rates
-    console.log('fromCurrency is ', fromCurrency)
-  })
+  console.log('amount is', amount.value)
+  convert(fromCurrencyCode, toCurrencyCode, convertAmount)
+})
+// fetch (urlBase)
+//   .then(response => response.json())
+//   .then(data => {
+//     console.log('working?', data)
+//     fromCurrencyEl = data.rates
+//     console.log('fromCurrencyEl is ', fromCurrencyEl)
+//   })
 
-  //symbols parameter yields specific exchange rates
+  function convert (from, to, amount) {
+  console.log(from)
+    fetch(urlBase + from)
+      .then(response => response.json())
+      .then(data => {
+        let rates = data.rates
+        console.log(rates[to]) 
+        calculate(rates[to], amount)
+      })
+  }
+  
+  function calculate (rate, amount) {
+    console.log('Exchange rate is ', rate)
+    let result = (amount * rate).toFixed(2)
+    finalAmountDiv.innerHTML = `<p>${result}</p>`
+    
 
-  fetch (urlSpecific)
-  .then(response => response.json())
-  .then(data3 => {
-    console.log('working?', data3)
-  // .then(data => {
-    fromCurrency = data3.rates
-    console.log('fromCurrency is ', fromCurrency)
-  })
+  }
+
+
+
+// event listener for 'convert button'
+// after convert is clicked; function takes the toCurrency.value and the fromCurrency.value 
+// puts them in a function with the amount and does some math or something and spits out the
+// answer into the finalAmountDiv
+
 
 
 
